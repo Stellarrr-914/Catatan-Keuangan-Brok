@@ -154,6 +154,7 @@
       tbody.innerHTML = "";
 
       transaksi.reverse().forEach((t) => {
+        const waktuFormatted = new Date(t.waktu).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${t.tanggal}</td>
@@ -161,7 +162,7 @@
           <td>${t.kategori}</td>
           <td>${t.akun}</td>
           <td>${t.keterangan}</td>
-          <td>${t.waktu}</td>
+          <td>${waktuFormatted}</td>
           <td class="actions">
             <button onclick='openModal(${JSON.stringify(t)})'>Edit</button>
             <button onclick='hapusTransaksi("${t.id}")'>Hapus</button>
