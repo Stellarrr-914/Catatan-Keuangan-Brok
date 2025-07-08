@@ -154,12 +154,15 @@
       tbody.innerHTML = "";
 
       transaksi.reverse().forEach((t) => {
-        const tanggalFormatted = new Date(t.tanggal).toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
-        const waktuFormatted = new Date(t.waktu).toLocaleTimeString("id-ID", { hour12: false, timeZone: "Asia/Jakarta" });
+        const jumlahFormatted = isNaN(parseInt(t.jumlah)) ? "-" : `Rp ${parseInt(t.jumlah).toLocaleString()}`;
+        const waktuFormatted = t.waktu && !isNaN(new Date(t.waktu))
+          ? new Date(t.waktu).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta" })
+          : "-";
+
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${tanggalFormatted}</td>
-          <td>Rp ${parseInt(t.jumlah).toLocaleString()}</td>
+          <td>${t.tanggal}</td>
+          <td>${jumlahFormatted}</td>
           <td>${t.kategori}</td>
           <td>${t.akun}</td>
           <td>${t.keterangan}</td>
