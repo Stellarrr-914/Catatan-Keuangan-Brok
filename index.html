@@ -139,12 +139,16 @@
         akun: akun.value,
         keterangan: keterangan.value
       };
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify(data)
       });
-      e.target.reset();
-      syncData();
+      if (res.ok) {
+        e.target.reset();
+        syncData();
+      } else {
+        alert("Gagal menyimpan data.");
+      }
     });
 
     async function syncData() {
@@ -200,21 +204,29 @@
         akun: document.getElementById("edit-akun").value,
         keterangan: document.getElementById("edit-keterangan").value
       };
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "PUT",
         body: JSON.stringify(data)
       });
-      closeModal();
-      syncData();
+      if (res.ok) {
+        closeModal();
+        syncData();
+      } else {
+        alert("Gagal mengedit data.");
+      }
     });
 
     async function hapusTransaksi(id) {
       if (!confirm("Yakin mau hapus transaksi ini?")) return;
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "DELETE",
         body: JSON.stringify({ id })
       });
-      syncData();
+      if (res.ok) {
+        syncData();
+      } else {
+        alert("Gagal menghapus data.");
+      }
     }
 
     syncData();
