@@ -1,69 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Dompet Brok</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catatan Keuangan Brok</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #121212;
-      color: #eee;
-      max-width: 600px;
-      margin: auto;
-      padding: 2rem;
+      padding: 1rem;
+      background: #f8f8f8;
     }
-    input, select, button, textarea {
-      padding: 0.5rem;
-      margin: 0.3rem 0;
-      width: 100%;
-      border-radius: 8px;
-      border: none;
-      box-sizing: border-box;
-    }
-    .btn {
-      background: #00b894;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
+    input, select, button {
+      margin: 4px;
+      padding: 8px;
     }
     table {
       width: 100%;
-      margin-top: 2rem;
       border-collapse: collapse;
+      margin-top: 1rem;
     }
     th, td {
-      padding: 0.6rem;
-      border-bottom: 1px solid #444;
+      border: 1px solid #aaa;
+      padding: 6px;
+      text-align: left;
     }
-    th {
-      background: #333;
+    .actions button {
+      margin-right: 5px;
+    }
+    #editModal {
+      display: none;
+      position: fixed;
+      background: white;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -20%);
+      z-index: 1000;
+      box-shadow: 0 0 10px #999;
+    }
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
     }
   </style>
 </head>
 <body>
-  <h1>📒 Dompet Brok</h1>
-
+  <h1>Catatan Keuangan Brok</h1>
   <form id="form">
-    <label>Tanggal</label>
-    <input type="date" id="tanggal" required>
-
-    <label>Kategori</label>
+    <input type="date" id="tanggal" required />
     <select id="kategori" required>
+      <option value="">--Kategori--</option>
       <option>Pulsa</option>
       <option>Langganan</option>
       <option>Budget Pacaran</option>
       <option>Bensin</option>
       <option>Uang Nganggur</option>
-      <option>Transfer ke Orang</option>
-      <option>Delivery / Ojol</option>
-      <option>Belanja Olshop</option>
+      <option>Transfer</option>
+      <option>Delivery/Ojol</option>
+      <option>Olshop</option>
     </select>
-
-    <label>Jumlah (Rp)</label>
-    <input type="number" id="jumlah" required>
-
-    <label>Akun / Dompet</label>
+    <input type="number" id="jumlah" placeholder="Nominal" required />
     <select id="akun" required>
+      <option value="">--Dompet--</option>
+      <option>Dompet Tunai</option>
       <option>DANA</option>
       <option>GoPay</option>
       <option>SeaBank</option>
@@ -71,72 +75,146 @@
       <option>Wondr</option>
       <option>PayPal</option>
     </select>
-
-    <label>Keterangan</label>
-    <textarea id="keterangan" rows="2" placeholder="Contoh: Langganan Bstation, Grab ke rumah Nana"></textarea>
-
-    <button class="btn" type="submit">💾 Simpan & Sync</button>
+    <input type="text" id="keterangan" placeholder="Keterangan" />
+    <button type="submit">Simpan</button>
+    <button type="button" onclick="syncData()">Sync</button>
   </form>
 
-  <h2>📆 Transaksi 30 Hari Terakhir</h2>
-  <table id="tabel">
+  <table id="riwayat">
     <thead>
       <tr>
         <th>Tanggal</th>
         <th>Kategori</th>
-        <th>Jumlah</th>
-        <th>Akun</th>
+        <th>Nominal</th>
+        <th>Dompet</th>
         <th>Keterangan</th>
+        <th>Waktu</th>
+        <th>Aksi</th>
       </tr>
     </thead>
     <tbody></tbody>
   </table>
 
+  <div id="overlay"></div>
+  <div id="editModal">
+    <h3>Edit Transaksi</h3>
+    <form id="editForm">
+      <input type="hidden" id="edit-id" />
+      <input type="date" id="edit-tanggal" required />
+      <select id="edit-kategori" required>
+        <option>Pulsa</option>
+        <option>Langganan</option>
+        <option>Budget Pacaran</option>
+        <option>Bensin</option>
+        <option>Uang Nganggur</option>
+        <option>Transfer</option>
+        <option>Delivery/Ojol</option>
+        <option>Olshop</option>
+      </select>
+      <input type="number" id="edit-jumlah" required />
+      <select id="edit-akun" required>
+        <option>Dompet Tunai</option>
+        <option>DANA</option>
+        <option>GoPay</option>
+        <option>SeaBank</option>
+        <option>ShopeePay</option>
+        <option>Wondr</option>
+        <option>PayPal</option>
+      </select>
+      <input type="text" id="edit-keterangan" />
+      <button type="submit">Update</button>
+      <button type="button" onclick="closeModal()">Batal</button>
+    </form>
+  </div>
+
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbyBC8CVtaR-iVLcwtRJOpOicaQVlX25PVcG1ADP3udf3F_hnWqeVZqFCvEkGHaDX3hcSw/exec";
+    const endpoint = "https://script.google.com/macros/s/AKfycbyBC8CVtaR-iVLcwtRJOpOicaQVlX25PVcG1ADP3udf3F_hnWqeVZqFCvEkGHaDX3hcSw/exec";
 
-    document.getElementById("form").addEventListener("submit", async function(e) {
+    document.getElementById("form").addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const data = {
-        tanggal: document.getElementById("tanggal").value,
-        kategori: document.getElementById("kategori").value,
-        jumlah: document.getElementById("jumlah").value,
-        akun: document.getElementById("akun").value,
-        keterangan: document.getElementById("keterangan").value || "-"
+        tanggal: tanggal.value,
+        kategori: kategori.value,
+        jumlah: jumlah.value,
+        akun: akun.value,
+        keterangan: keterangan.value
       };
-
-      await fetch(url, {
+      await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify(data)
       });
-
-      alert("✅ Transaksi tersimpan!");
       e.target.reset();
-      loadData();
+      syncData();
     });
 
-    async function loadData() {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      const tbody = document.querySelector("tbody");
+    async function syncData() {
+      const res = await fetch(endpoint);
+      const transaksi = await res.json();
+      const tbody = document.querySelector("#riwayat tbody");
       tbody.innerHTML = "";
 
-      data.forEach(row => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${row.tanggal || "-"}</td>
-          <td>${row.kategori || "-"}</td>
-          <td>Rp ${parseInt(row.jumlah || 0).toLocaleString("id-ID")}</td>
-          <td>${row.akun || "-"}</td>
-          <td>${row.keterangan || "-"}</td>
+      transaksi.reverse().forEach((t) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${t.tanggal}</td>
+          <td>${t.kategori}</td>
+          <td>Rp ${parseInt(t.jumlah).toLocaleString()}</td>
+          <td>${t.akun}</td>
+          <td>${t.keterangan}</td>
+          <td>${t.waktu}</td>
+          <td class="actions">
+            <button onclick='openModal(${JSON.stringify(t)})'>Edit</button>
+            <button onclick='hapusTransaksi("${t.id}")'>Hapus</button>
+          </td>
         `;
-        tbody.appendChild(tr);
+        tbody.appendChild(row);
       });
     }
 
-    loadData();
+    function openModal(data) {
+      document.getElementById("edit-id").value = data.id;
+      document.getElementById("edit-tanggal").value = data.tanggal;
+      document.getElementById("edit-kategori").value = data.kategori;
+      document.getElementById("edit-jumlah").value = data.jumlah;
+      document.getElementById("edit-akun").value = data.akun;
+      document.getElementById("edit-keterangan").value = data.keterangan;
+      document.getElementById("overlay").style.display = "block";
+      document.getElementById("editModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("overlay").style.display = "none";
+      document.getElementById("editModal").style.display = "none";
+    }
+
+    document.getElementById("editForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        id: document.getElementById("edit-id").value,
+        tanggal: document.getElementById("edit-tanggal").value,
+        kategori: document.getElementById("edit-kategori").value,
+        jumlah: document.getElementById("edit-jumlah").value,
+        akun: document.getElementById("edit-akun").value,
+        keterangan: document.getElementById("edit-keterangan").value
+      };
+      await fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(data)
+      });
+      closeModal();
+      syncData();
+    });
+
+    async function hapusTransaksi(id) {
+      if (!confirm("Yakin mau hapus transaksi ini?")) return;
+      await fetch(endpoint, {
+        method: "DELETE",
+        body: JSON.stringify({ id })
+      });
+      syncData();
+    }
+
+    syncData();
   </script>
 </body>
 </html>
