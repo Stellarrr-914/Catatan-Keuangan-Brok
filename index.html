@@ -133,16 +133,18 @@
     document.getElementById("form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const data = {
-        tanggal: document.getElementById("tanggal").value,
-        jumlah: document.getElementById("jumlah").value,
-        kategori: document.getElementById("kategori").value,
-        akun: document.getElementById("akun").value,
-        keterangan: document.getElementById("keterangan").value
+        tanggal: tanggal.value,
+        jumlah: jumlah.value,
+        kategori: kategori.value,
+        akun: akun.value,
+        keterangan: keterangan.value
       };
-      await fetch(endpoint, {
+      const res = await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify(data)
       });
+      const result = await res.text();
+      alert("Data berhasil disimpan: " + result);
       e.target.reset();
       syncData();
     });
@@ -155,9 +157,7 @@
 
       transaksi.reverse().forEach((t) => {
         const jumlahFormatted = isNaN(parseInt(t.jumlah)) ? "-" : `Rp ${parseInt(t.jumlah).toLocaleString()}`;
-        const waktuFormatted = t.waktu && !isNaN(Date.parse(t.waktu))
-          ? new Date(t.waktu).toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta" })
-          : "-";
+        const waktuFormatted = t.waktu ? new Date(t.waktu).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "-";
 
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -202,28 +202,32 @@
         akun: document.getElementById("edit-akun").value,
         keterangan: document.getElementById("edit-keterangan").value
       };
-      const res = await fetch(endpoint, {
-        method: "PUT",
-        body: JSON.stringify(data)
-      });
-      if (res.ok) {
+      try {
+        const res = await fetch(endpoint, {
+          method: "PUT",
+          body: JSON.stringify(data)
+        });
+        const result = await res.text();
+        alert("Data berhasil diupdate: " + result);
         closeModal();
         syncData();
-      } else {
-        alert("Gagal mengupdate data!");
+      } catch (err) {
+        alert("Gagal update data");
       }
     });
 
     async function hapusTransaksi(id) {
       if (!confirm("Yakin mau hapus transaksi ini?")) return;
-      const res = await fetch(endpoint, {
-        method: "DELETE",
-        body: JSON.stringify({ id })
-      });
-      if (res.ok) {
+      try {
+        const res = await fetch(endpoint, {
+          method: "DELETE",
+          body: JSON.stringify({ id })
+        });
+        const result = await res.text();
+        alert("Data berhasil dihapus: " + result);
         syncData();
-      } else {
-        alert("Gagal menghapus data!");
+      } catch (err) {
+        alert("Gagal menghapus data");
       }
     }
 
