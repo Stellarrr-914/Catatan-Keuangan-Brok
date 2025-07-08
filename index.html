@@ -12,12 +12,13 @@
       margin: auto;
       padding: 2rem;
     }
-    input, select, button {
+    input, select, button, textarea {
       padding: 0.5rem;
       margin: 0.3rem 0;
       width: 100%;
       border-radius: 8px;
       border: none;
+      box-sizing: border-box;
     }
     .btn {
       background: #00b894;
@@ -71,6 +72,9 @@
       <option>PayPal</option>
     </select>
 
+    <label>Keterangan</label>
+    <textarea id="keterangan" rows="2" placeholder="Contoh: Langganan Bstation, Grab ke rumah Nana"></textarea>
+
     <button class="btn" type="submit">💾 Simpan & Sync</button>
   </form>
 
@@ -82,6 +86,7 @@
         <th>Kategori</th>
         <th>Jumlah</th>
         <th>Akun</th>
+        <th>Keterangan</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -90,7 +95,6 @@
   <script>
     const url = "https://script.google.com/macros/s/AKfycbyBC8CVtaR-iVLcwtRJOpOicaQVlX25PVcG1ADP3udf3F_hnWqeVZqFCvEkGHaDX3hcSw/exec";
 
-    // Kirim data ke Google Sheets
     document.getElementById("form").addEventListener("submit", async function(e) {
       e.preventDefault();
 
@@ -98,7 +102,8 @@
         tanggal: document.getElementById("tanggal").value,
         kategori: document.getElementById("kategori").value,
         jumlah: document.getElementById("jumlah").value,
-        akun: document.getElementById("akun").value
+        akun: document.getElementById("akun").value,
+        keterangan: document.getElementById("keterangan").value || "-"
       };
 
       await fetch(url, {
@@ -107,11 +112,10 @@
       });
 
       alert("✅ Transaksi tersimpan!");
-      loadData();
       e.target.reset();
+      loadData();
     });
 
-    // Ambil data dari Google Sheets
     async function loadData() {
       const res = await fetch(url);
       const data = await res.json();
@@ -122,16 +126,17 @@
       data.forEach(row => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.tanggal}</td>
-          <td>${row.kategori}</td>
-          <td>Rp ${parseInt(row.jumlah).toLocaleString("id-ID")}</td>
-          <td>${row.akun}</td>
+          <td>${row.tanggal || "-"}</td>
+          <td>${row.kategori || "-"}</td>
+          <td>Rp ${parseInt(row.jumlah || 0).toLocaleString("id-ID")}</td>
+          <td>${row.akun || "-"}</td>
+          <td>${row.keterangan || "-"}</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    loadData(); // Panggil saat halaman dibuka
+    loadData();
   </script>
 </body>
 </html>
