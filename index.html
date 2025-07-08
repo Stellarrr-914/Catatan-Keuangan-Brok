@@ -139,12 +139,10 @@
         akun: akun.value,
         keterangan: keterangan.value
       };
-      const res = await fetch(endpoint, {
+      await fetch(endpoint, {
         method: "POST",
         body: JSON.stringify(data)
       });
-      const result = await res.text();
-      alert("Data berhasil disimpan: " + result);
       e.target.reset();
       syncData();
     });
@@ -157,7 +155,7 @@
 
       transaksi.reverse().forEach((t) => {
         const jumlahFormatted = isNaN(parseInt(t.jumlah)) ? "-" : `Rp ${parseInt(t.jumlah).toLocaleString()}`;
-        const waktuFormatted = t.waktu ? new Date(t.waktu).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "-";
+        const waktuFormatted = t.waktu ? t.waktu : "-";
 
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -202,33 +200,21 @@
         akun: document.getElementById("edit-akun").value,
         keterangan: document.getElementById("edit-keterangan").value
       };
-      try {
-        const res = await fetch(endpoint, {
-          method: "PUT",
-          body: JSON.stringify(data)
-        });
-        const result = await res.text();
-        alert("Data berhasil diupdate: " + result);
-        closeModal();
-        syncData();
-      } catch (err) {
-        alert("Gagal update data");
-      }
+      await fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(data)
+      });
+      closeModal();
+      syncData();
     });
 
     async function hapusTransaksi(id) {
       if (!confirm("Yakin mau hapus transaksi ini?")) return;
-      try {
-        const res = await fetch(endpoint, {
-          method: "DELETE",
-          body: JSON.stringify({ id })
-        });
-        const result = await res.text();
-        alert("Data berhasil dihapus: " + result);
-        syncData();
-      } catch (err) {
-        alert("Gagal menghapus data");
-      }
+      await fetch(endpoint, {
+        method: "DELETE",
+        body: JSON.stringify({ id })
+      });
+      syncData();
     }
 
     syncData();
