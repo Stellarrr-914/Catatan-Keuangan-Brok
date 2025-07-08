@@ -159,7 +159,7 @@
 
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${t.tanggal}</td>
+          <td>${formatTanggal(t.tanggal)}</td>
           <td>${jumlahFormatted}</td>
           <td>${t.kategori}</td>
           <td>${t.akun}</td>
@@ -188,6 +188,13 @@
     function closeModal() {
       document.getElementById("overlay").style.display = "none";
       document.getElementById("editModal").style.display = "none";
+    }
+
+    function formatTanggal(iso) {
+      const date = new Date(iso);
+      return `${date.getDate().toString().padStart(2, "0")}-${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date.getFullYear()}`;
     }
 
     document.getElementById("editForm").addEventListener("submit", async (e) => {
