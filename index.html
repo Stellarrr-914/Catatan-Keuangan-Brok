@@ -53,6 +53,7 @@
   <h1>Catatan Keuangan Brok</h1>
   <form id="form">
     <input type="date" id="tanggal" required />
+    <input type="number" id="jumlah" placeholder="Nominal" required />
     <select id="kategori" required>
       <option value="">--Kategori--</option>
       <option>Pulsa</option>
@@ -64,7 +65,6 @@
       <option>Delivery/Ojol</option>
       <option>Olshop</option>
     </select>
-    <input type="number" id="jumlah" placeholder="Nominal" required />
     <select id="akun" required>
       <option value="">--Dompet--</option>
       <option>Dompet Tunai</option>
@@ -84,8 +84,8 @@
     <thead>
       <tr>
         <th>Tanggal</th>
-        <th>Kategori</th>
         <th>Nominal</th>
+        <th>Kategori</th>
         <th>Dompet</th>
         <th>Keterangan</th>
         <th>Waktu</th>
@@ -101,6 +101,7 @@
     <form id="editForm">
       <input type="hidden" id="edit-id" />
       <input type="date" id="edit-tanggal" required />
+      <input type="number" id="edit-jumlah" required />
       <select id="edit-kategori" required>
         <option>Pulsa</option>
         <option>Langganan</option>
@@ -111,7 +112,6 @@
         <option>Delivery/Ojol</option>
         <option>Olshop</option>
       </select>
-      <input type="number" id="edit-jumlah" required />
       <select id="edit-akun" required>
         <option>Dompet Tunai</option>
         <option>DANA</option>
@@ -134,8 +134,8 @@
       e.preventDefault();
       const data = {
         tanggal: tanggal.value,
-        kategori: kategori.value,
         jumlah: jumlah.value,
+        kategori: kategori.value,
         akun: akun.value,
         keterangan: keterangan.value
       };
@@ -157,8 +157,8 @@
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${t.tanggal}</td>
-          <td>${t.kategori}</td>
           <td>Rp ${parseInt(t.jumlah).toLocaleString()}</td>
+          <td>${t.kategori}</td>
           <td>${t.akun}</td>
           <td>${t.keterangan}</td>
           <td>${t.waktu}</td>
@@ -174,8 +174,8 @@
     function openModal(data) {
       document.getElementById("edit-id").value = data.id;
       document.getElementById("edit-tanggal").value = data.tanggal;
-      document.getElementById("edit-kategori").value = data.kategori;
       document.getElementById("edit-jumlah").value = data.jumlah;
+      document.getElementById("edit-kategori").value = data.kategori;
       document.getElementById("edit-akun").value = data.akun;
       document.getElementById("edit-keterangan").value = data.keterangan;
       document.getElementById("overlay").style.display = "block";
@@ -192,8 +192,8 @@
       const data = {
         id: document.getElementById("edit-id").value,
         tanggal: document.getElementById("edit-tanggal").value,
-        kategori: document.getElementById("edit-kategori").value,
         jumlah: document.getElementById("edit-jumlah").value,
+        kategori: document.getElementById("edit-kategori").value,
         akun: document.getElementById("edit-akun").value,
         keterangan: document.getElementById("edit-keterangan").value
       };
