@@ -97,6 +97,21 @@
   <div class="notif" id="notif">✅ Data berhasil disimpan!</div>
 
   <script>
+  function getLocalTimeWIB() {
+    const now = new Date();
+    const offset = 7 * 60; // WIB = UTC+7
+    const local = new Date(now.getTime() + offset * 60000);
+
+    const yyyy = local.getFullYear();
+    const mm = String(local.getMonth() + 1).padStart(2, '0');
+    const dd = String(local.getDate()).padStart(2, '0');
+    const hh = String(local.getHours()).padStart(2, '0');
+    const mi = String(local.getMinutes()).padStart(2, '0');
+    const ss = String(local.getSeconds()).padStart(2, '0');
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+
   const form = document.getElementById("form");
   const notif = document.getElementById("notif");
   const scriptURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
@@ -104,8 +119,7 @@
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const now = new Date();
-    const waktu_input = now.toISOString().replace("T", " ").replace("Z", "");
+    const waktu_input = getLocalTimeWIB(); // ⬅️ Pakai fungsi di atas
 
     const formData = new URLSearchParams();
     formData.append("tanggal", form.tanggal.value);
@@ -136,6 +150,5 @@
     }
   });
 </script>
-
 </body>
 </html>
