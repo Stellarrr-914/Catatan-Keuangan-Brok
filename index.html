@@ -50,6 +50,21 @@
       text-align: center;
       display: none;
     }
+
+    #riwayat {
+      margin-top: 20px;
+    }
+    
+    .transaksi {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+    
+    .transaksi:nth-child(odd) {
+      background: #f9f9f9;
+    }
+    
   </style>
 </head>
 <body>
@@ -96,6 +111,10 @@
 
   <div class="notif" id="notif">✅ Data berhasil disimpan!</div>
 
+  <h3>Riwayat Transaksi</h3>
+  <div id="riwayat">Loading...</div>
+
+
   <script>
   function getLocalTimeWIB() {
   return new Date().toLocaleString("sv-SE", {
@@ -141,6 +160,37 @@
       alert("Error koneksi: " + err.message);
     }
   });
+
+    const riwayatDiv = document.getElementById("riwayat");
+    const readURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
+
+    async function loadRiwayat() {
+      try {
+        const res = await fetch(readURL);
+        const data = await res.json();
+
+        if (data.length === 0) {
+          riwayatDiv.innerHTML = "Belum ada transaksi.";
+          return;
+        }
+
+        riwayatDiv.innerHTML = data.map(row => {
+        const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
+        return `
+          <div class="transaksi">
+            <strong>${tanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
+            <em>${kategori}</em> | ${akun}<br/>
+            ${keterangan || "-"}<br/>
+            <small>${waktu_input}</small>
+          </div>
+        `;
+      }).join("");
+    } catch (err) {
+      riwayatDiv.innerHTML = "Gagal memuat data: " + err.message;
+    }
+  }
+
+  loadRiwayat();
 </script>
 </body>
 </html>
