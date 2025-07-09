@@ -161,7 +161,7 @@
     }
   });
 
-    const riwayatDiv = document.getElementById("riwayat");
+        const riwayatDiv = document.getElementById("riwayat");
     const readURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
 
     async function loadRiwayat() {
@@ -175,41 +175,47 @@
         }
 
         riwayatDiv.innerHTML = data.map(row => {
-  const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
+          const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
 
-  const tampilTanggal = tanggal
-    ? new Date(tanggal).toLocaleDateString("id-ID", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      })
-    : "-";
+          const tampilTanggal = tanggal
+            ? new Date(tanggal).toLocaleDateString("id-ID", {
+                weekday: "long",
+                day: "2-digit",
+                month: "long",
+                year: "numeric"
+              })
+            : "-";
 
-  const tampilWaktu = waktu_input
-    ? new Date(waktu_input).toLocaleString("id-ID", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-        timeZone: "Asia/Jakarta"
-      })
-    : "-";
+          const tampilWaktu = waktu_input
+            ? new Date(waktu_input).toLocaleString("id-ID", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false,
+                timeZone: "Asia/Jakarta"
+              })
+            : "-";
 
-  return `
-    <div class="transaksi">
-      <strong>${tampilTanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
-      <em>${kategori}</em> | ${akun}<br/>
-      ${keterangan || "-"}<br/>
-      <small>Input: ${tampilWaktu}</small>
-    </div>
-  `;
-  }).join("");
+          return `
+            <div class="transaksi">
+              <strong>${tampilTanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
+              <em>${kategori}</em> | ${akun}<br/>
+              ${keterangan || "-"}<br/>
+              <small>Input: ${tampilWaktu}</small>
+            </div>
+          `;
+        }).join("");
 
-  loadRiwayat();
+      } catch (err) {
+        riwayatDiv.innerHTML = "Gagal memuat data: " + err.message;
+      }
+    }
+
+    loadRiwayat();
+
 </script>
 </body>
 </html>
