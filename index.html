@@ -175,20 +175,40 @@
         }
 
         riwayatDiv.innerHTML = data.map(row => {
-        const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
-        return `
-          <div class="transaksi">
-            <strong>${tanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
-            <em>${kategori}</em> | ${akun}<br/>
-            ${keterangan || "-"}<br/>
-            <small>${waktu_input}</small>
-          </div>
-        `;
-      }).join("");
-    } catch (err) {
-      riwayatDiv.innerHTML = "Gagal memuat data: " + err.message;
-    }
-  }
+       data.map(row => {
+  const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
+
+  const tampilTanggal = tanggal
+    ? new Date(tanggal).toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      })
+    : "-";
+
+  const tampilWaktu = waktu_input
+    ? new Date(waktu_input).toLocaleString("id-ID", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Jakarta"
+      })
+    : "-";
+
+  return `
+    <div class="transaksi">
+      <strong>${tampilTanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
+      <em>${kategori}</em> | ${akun}<br/>
+      ${keterangan || "-"}<br/>
+      <small>Input: ${tampilWaktu}</small>
+    </div>
+  `;
+})
 
   loadRiwayat();
 </script>
