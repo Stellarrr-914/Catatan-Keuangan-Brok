@@ -3,233 +3,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catatan Keuangan Brok</title>
+  <title>Catatan Keuangan</title>
   <style>
     body {
       font-family: sans-serif;
-      padding: 1rem;
-      background: #f8f8f8;
+      max-width: 480px;
+      margin: auto;
+      padding: 20px;
+      background-color: #fefefe;
     }
-    input, select, button {
-      margin: 4px;
-      padding: 8px;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
     }
-    table {
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    input, select, textarea, button {
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+      padding: 10px;
+      margin-top: 6px;
+      box-sizing: border-box;
+      font-size: 1rem;
     }
-    th, td {
-      border: 1px solid #aaa;
-      padding: 6px;
-      text-align: left;
+
+    button {
+      margin-top: 20px;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
-    .actions button {
-      margin-right: 5px;
+
+    button:hover {
+      background-color: #555;
     }
-    #editModal {
-      display: none;
-      position: fixed;
-      background: white;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      top: 20%;
-      left: 50%;
-      transform: translate(-50%, -20%);
-      z-index: 1000;
-      box-shadow: 0 0 10px #999;
-    }
-    #overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      z-index: 999;
+
+    .success {
+      color: green;
+      margin-top: 16px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1>Catatan Keuangan Brok</h1>
-  <form id="form">
-    <input type="date" id="tanggal" required />
-    <input type="number" id="jumlah" placeholder="Nominal" required />
-    <select id="kategori" required>
-      <option value="">--Kategori--</option>
-      <option>Pulsa</option>
-      <option>Langganan</option>
-      <option>Budget Pacaran</option>
-      <option>Bensin</option>
-      <option>Uang Nganggur</option>
-      <option>Transfer</option>
-      <option>Delivery/Ojol</option>
-      <option>Olshop</option>
+  <h2>Catatan Keuangan</h2>
+  <form id="form-transaksi">
+    <label for="tanggal">Tanggal</label>
+    <input type="date" id="tanggal" name="tanggal" required />
+
+    <label for="jumlah">Nominal (Rp)</label>
+    <input type="number" id="jumlah" name="jumlah" required />
+
+    <label for="kategori">Kategori</label>
+    <select id="kategori" name="kategori" required>
+      <option value="" disabled selected>Pilih Kategori</option>
+      <option>Belanja</option>
+      <option>Makan</option>
+      <option>Transportasi</option>
+      <option>Tagihan</option>
+      <option>Gaji</option>
+      <option>Lainnya</option>
     </select>
-    <select id="akun" required>
-      <option value="">--Dompet--</option>
-      <option>Dompet Tunai</option>
+
+    <label for="akun">Dompet / Akun</label>
+    <select id="akun" name="akun" required>
+      <option value="" disabled selected>Pilih Akun</option>
+      <option>Wondr (BNI)</option>
+      <option>ShopeePay</option>
+      <option>SeaBank</option>
       <option>DANA</option>
       <option>GoPay</option>
-      <option>SeaBank</option>
-      <option>ShopeePay</option>
-      <option>Wondr</option>
       <option>PayPal</option>
+      <option>BRI</option>
+      <option>BCA</option>
     </select>
-    <input type="text" id="keterangan" placeholder="Keterangan" />
+
+    <label for="keterangan">Keterangan</label>
+    <textarea id="keterangan" name="keterangan" rows="2"></textarea>
+
     <button type="submit">Simpan</button>
-    <button type="button" onclick="syncData()">Sync</button>
+    <div class="success" id="successMsg"></div>
   </form>
 
-  <table id="riwayat">
-    <thead>
-      <tr>
-        <th>Tanggal</th>
-        <th>Nominal</th>
-        <th>Kategori</th>
-        <th>Dompet</th>
-        <th>Keterangan</th>
-        <th>Waktu</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <div id="overlay"></div>
-  <div id="editModal">
-    <h3>Edit Transaksi</h3>
-    <form id="editForm">
-      <input type="hidden" id="edit-id" />
-      <input type="date" id="edit-tanggal" required />
-      <input type="number" id="edit-jumlah" required />
-      <select id="edit-kategori" required>
-        <option>Pulsa</option>
-        <option>Langganan</option>
-        <option>Budget Pacaran</option>
-        <option>Bensin</option>
-        <option>Uang Nganggur</option>
-        <option>Transfer</option>
-        <option>Delivery/Ojol</option>
-        <option>Olshop</option>
-      </select>
-      <select id="edit-akun" required>
-        <option>Dompet Tunai</option>
-        <option>DANA</option>
-        <option>GoPay</option>
-        <option>SeaBank</option>
-        <option>ShopeePay</option>
-        <option>Wondr</option>
-        <option>PayPal</option>
-      </select>
-      <input type="text" id="edit-keterangan" />
-      <button type="submit">Update</button>
-      <button type="button" onclick="closeModal()">Batal</button>
-    </form>
-  </div>
-
   <script>
-    const endpoint = "https://script.google.com/macros/s/AKfycbyBC8CVtaR-iVLcwtRJOpOicaQVlX25PVcG1ADP3udf3F_hnWqeVZqFCvEkGHaDX3hcSw/exec";
-
-    document.getElementById("form").addEventListener("submit", async (e) => {
+    document.getElementById("form-transaksi").addEventListener("submit", function(e) {
       e.preventDefault();
+
+      const url = "https://script.google.com/macros/s/AKfycbyBC8CVtaR-iVLcwtRJOpOicaQVlX25PVcG1ADP3udf3F_hnWqeVZqFCvEkGHaDX3hcSw/exec";
+
       const data = {
-        tanggal: tanggal.value,
-        jumlah: jumlah.value,
-        kategori: kategori.value,
-        akun: akun.value,
-        keterangan: keterangan.value
+        tanggal: document.getElementById("tanggal").value,
+        jumlah: parseFloat(document.getElementById("jumlah").value),
+        kategori: document.getElementById("kategori").value,
+        akun: document.getElementById("akun").value,
+        keterangan: document.getElementById("keterangan").value,
+        waktu_input: new Date().toISOString()
       };
-      const res = await fetch(endpoint, {
+
+      fetch(url, {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(res => res.json())
+      .then(response => {
+        document.getElementById("successMsg").textContent = "Data berhasil disimpan!";
+        document.getElementById("form-transaksi").reset();
+      })
+      .catch(err => {
+        document.getElementById("successMsg").textContent = "Gagal menyimpan data.";
+        console.error(err);
       });
-      if (res.ok) {
-        e.target.reset();
-        syncData();
-      } else {
-        alert("Gagal menyimpan data.");
-      }
     });
-
-    async function syncData() {
-      const res = await fetch(endpoint);
-      const transaksi = await res.json();
-      const tbody = document.querySelector("#riwayat tbody");
-      tbody.innerHTML = "";
-
-      transaksi.reverse().forEach((t) => {
-        const jumlahFormatted = isNaN(parseInt(t.jumlah)) ? "-" : `Rp ${parseInt(t.jumlah).toLocaleString()}`;
-        const waktuFormatted = t.waktu ? t.waktu.replace("T", " ").replace("Z", "") : "-";
-
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${t.tanggal}</td>
-          <td>${jumlahFormatted}</td>
-          <td>${t.kategori}</td>
-          <td>${t.akun}</td>
-          <td>${t.keterangan}</td>
-          <td>${waktuFormatted}</td>
-          <td class="actions">
-            <button onclick='openModal(${JSON.stringify(t)})'>Edit</button>
-            <button onclick='hapusTransaksi("${t.id}")'>Hapus</button>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    function openModal(data) {
-      document.getElementById("edit-id").value = data.id;
-      document.getElementById("edit-tanggal").value = data.tanggal;
-      document.getElementById("edit-jumlah").value = data.jumlah;
-      document.getElementById("edit-kategori").value = data.kategori;
-      document.getElementById("edit-akun").value = data.akun;
-      document.getElementById("edit-keterangan").value = data.keterangan;
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("editModal").style.display = "block";
-    }
-
-    function closeModal() {
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("editModal").style.display = "none";
-    }
-
-    document.getElementById("editForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const data = {
-        id: document.getElementById("edit-id").value,
-        tanggal: document.getElementById("edit-tanggal").value,
-        jumlah: document.getElementById("edit-jumlah").value,
-        kategori: document.getElementById("edit-kategori").value,
-        akun: document.getElementById("edit-akun").value,
-        keterangan: document.getElementById("edit-keterangan").value
-      };
-      const res = await fetch(endpoint, {
-        method: "PUT",
-        body: JSON.stringify(data)
-      });
-      if (res.ok) {
-        closeModal();
-        syncData();
-      } else {
-        alert("Gagal mengedit data.");
-      }
-    });
-
-    async function hapusTransaksi(id) {
-      if (!confirm("Yakin mau hapus transaksi ini?")) return;
-      const res = await fetch(endpoint, {
-        method: "DELETE",
-        body: JSON.stringify({ id })
-      });
-      if (res.ok) {
-        syncData();
-      } else {
-        alert("Gagal menghapus data.");
-      }
-    }
-
-    syncData();
   </script>
 </body>
 </html>
