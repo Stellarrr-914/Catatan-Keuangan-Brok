@@ -97,48 +97,45 @@
   <div class="notif" id="notif">✅ Data berhasil disimpan!</div>
 
   <script>
-    const form = document.getElementById("form");
-    const notif = document.getElementById("notif");
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
+  const form = document.getElementById("form");
+  const notif = document.getElementById("notif");
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      const now = new Date();
-      const waktu_input = now.toISOString().replace('T', ' ').replace('Z', '');
+    const now = new Date();
+    const waktu_input = now.toISOString().replace("T", " ").replace("Z", "");
 
-      const data = {
-        tanggal: form.tanggal.value,
-        jumlah: form.jumlah.value,
-        kategori: form.kategori.value,
-        akun: form.akun.value,
-        keterangan: form.keterangan.value,
-        waktu_input: waktu_input
-      };
+    const formData = new URLSearchParams();
+    formData.append("tanggal", form.tanggal.value);
+    formData.append("jumlah", form.jumlah.value);
+    formData.append("kategori", form.kategori.value);
+    formData.append("akun", form.akun.value);
+    formData.append("keterangan", form.keterangan.value);
+    formData.append("waktu_input", waktu_input);
 
-      try {
-        const res = await fetch(scriptURL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        });
+    try {
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        body: formData,
+      });
 
-        const result = await res.text();
-        if (res.ok) {
-          notif.style.display = "block";
-          form.reset();
-          setTimeout(() => {
-            notif.style.display = "none";
-          }, 3000);
-        } else {
-          alert("Gagal menyimpan data: " + result);
-        }
-      } catch (err) {
-        alert("Error koneksi: " + err.message);
+      const result = await res.text();
+      if (res.ok) {
+        notif.style.display = "block";
+        form.reset();
+        setTimeout(() => {
+          notif.style.display = "none";
+        }, 3000);
+      } else {
+        alert("Gagal simpan: " + result);
       }
-    });
-  </script>
+    } catch (err) {
+      alert("Error koneksi: " + err.message);
+    }
+  });
+</script>
+
 </body>
 </html>
