@@ -98,19 +98,11 @@
 
   <script>
   function getLocalTimeWIB() {
-    const now = new Date();
-    const offset = 7 * 60; // WIB = UTC+7
-    const local = new Date(now.getTime() + offset * 60000);
-
-    const yyyy = local.getFullYear();
-    const mm = String(local.getMonth() + 1).padStart(2, '0');
-    const dd = String(local.getDate()).padStart(2, '0');
-    const hh = String(local.getHours()).padStart(2, '0');
-    const mi = String(local.getMinutes()).padStart(2, '0');
-    const ss = String(local.getSeconds()).padStart(2, '0');
-
-    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
-  }
+  return new Date().toLocaleString("sv-SE", {
+    timeZone: "Asia/Jakarta",
+    hour12: false
+  }).replace(",", "");
+}
 
   const form = document.getElementById("form");
   const notif = document.getElementById("notif");
