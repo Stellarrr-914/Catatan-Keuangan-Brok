@@ -106,16 +106,17 @@
   </form>
 
   <div class="notif" id="notif">✅ Data berhasil disimpan!</div>
-  <iframe name="dummyframe" onload="showNotif()"></iframe>
+  <iframe name="dummyframe" id="dummyframe"></iframe>
 
   <script>
-    function setWaktuInput() {
-      const now = new Date();
-      const formatted = now.toISOString().replace('T', ' ').replace('Z', '');
-      document.getElementById("waktu_input").value = formatted;
-    }
+  function setWaktuInput() {
+    const now = new Date();
+    const formatted = now.toISOString().replace('T', ' ').replace('Z', '');
+    document.getElementById("waktu_input").value = formatted;
+  }
 
-    function showNotif() {
+  window.addEventListener("message", function(event) {
+    if (event.data === "success") {
       const notif = document.getElementById("notif");
       notif.style.display = "block";
       document.getElementById("form").reset();
@@ -123,6 +124,7 @@
         notif.style.display = "none";
       }, 3000);
     }
-  </script>
+  });
+</script>
 </body>
 </html>
