@@ -7,24 +7,43 @@
   <style>
     body { font-family: sans-serif; padding: 1rem; }
     .transaksi { margin-bottom: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
+    
+    .filter-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .filter-panel label,
+  .filter-panel button {
+    flex: 1 1 100%;
+  }
+
+  @media (min-width: 600px) {
+    .filter-panel label {
+      flex: 1 1 auto;
+    }
+
+    .filter-panel button {
+      flex: 0 0 auto;
+    }
+  }
   </style>
 </head>
 <body>
   <h2>Riwayat Transaksi</h2>
   <a href="index.html">← Kembali ke Input</a>
 
-  <button onclick="toggleFilter()" id="filterBtn">🔍 Filter</button>
+  <button onclick="toggleFilter()">🔍 Filter</button>
 
-<div id="filterPanel" style="display:none; margin-top: 1rem;">
+<div id="filterPanel" class="filter-panel" style="display: none;">
   <label>Kategori:
     <select id="filterKategori">
       <option value="">Semua</option>
       <option value="Pulsa">Pulsa</option>
-      <option value="Langganan Bstation">Langganan Bstation</option>
-      <option value="Budget Pacaran">Budget Pacaran</option>
-      <option value="Uang Nganggur">Uang Nganggur</option>
-      <option value="Olshop">Olshop</option>
-      <option value="Bensin">Bensin</option>
+      <option value="Langganan Bstation 💻">Langganan Bstation 💻</option>
+      <!-- dll -->
     </select>
   </label>
 
@@ -32,11 +51,7 @@
     <select id="filterAkun">
       <option value="">Semua</option>
       <option value="DANA">DANA</option>
-      <option value="SeaBank">SeaBank</option>
-      <option value="ShopeePay">ShopeePay</option>
-      <option value="GoPay">GoPay</option>
-      <option value="Wondr">Wondr</option>
-      <!-- isi sesuai akun lo -->
+      <!-- dll -->
     </select>
   </label>
 
@@ -51,6 +66,7 @@
   <button onclick="loadRiwayat()">Terapkan Filter</button>
   <button onclick="resetFilter()">Reset Filter</button>
 </div>
+
 
   <div id="riwayat">Loading...</div>
 
