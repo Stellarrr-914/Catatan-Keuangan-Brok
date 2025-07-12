@@ -5,35 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Riwayat Transaksi</title>
   <style>
-    body { font-family: sans-serif; padding: 1rem; }
-    .transaksi { margin-bottom: 1rem; border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; }
-    
-    .filter-panel {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+  body {
+    font-family: sans-serif;
+    padding: 1rem;
   }
 
-  .filter-panel label, {
-    display: block;
-    flex: 1 1 100%
+  .transaksi {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
   }
-    
+
+  /* STYLE UNTUK FILTER PANEL */
+  .filter-panel {
+    display: flex;
+    flex-direction: column; /* force ke bawah */
+    gap: 0.75rem;
+    margin: 1rem 0;
+  }
+
+  .filter-panel label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+  }
+
+  .filter-panel select {
+    padding: 0.4rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
   .filter-panel button {
-    flex: 1 1 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+
+  .filter-panel button:hover {
+    background-color: #666;
   }
 
   @media (min-width: 600px) {
+    .filter-panel {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
     .filter-panel label {
-      flex: 1 1 auto;
+      flex: 1 1 200px;
     }
 
     .filter-panel button {
       flex: 0 0 auto;
     }
   }
-  </style>
+</style>
 </head>
 <body>
   <h2>Riwayat Transaksi</h2>
@@ -47,7 +80,6 @@
       <option value="">Semua</option>
       <option value="Pulsa">Pulsa</option>
       <option value="Langganan Bstation 💻">Langganan Bstation 💻</option>
-      <!-- dll -->
     </select>
   </label>
 
@@ -55,7 +87,7 @@
     <select id="filterAkun">
       <option value="">Semua</option>
       <option value="DANA">DANA</option>
-      <!-- dll -->
+      <option value="ShopeePay">ShopeePay</option>
     </select>
   </label>
 
@@ -70,7 +102,6 @@
   <button onclick="loadRiwayat()">Terapkan Filter</button>
   <button onclick="resetFilter()">Reset Filter</button>
 </div>
-
 
   <div id="riwayat">Loading...</div>
 
