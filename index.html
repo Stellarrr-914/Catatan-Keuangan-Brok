@@ -111,8 +111,10 @@
 
   <div class="notif" id="notif">✅ Data berhasil disimpan!</div>
 
+  <button onclick="toggleRiwayat()" id="toggleRiwayatBtn">Lihat Riwayat</button>
+
   <h3>Riwayat Transaksi</h3>
-  <div id="riwayat">Loading...</div>
+  <div id="riwayat" style="display: none;">Loading...</div>
 
 
   <script>
@@ -215,6 +217,21 @@
     }
 
     loadRiwayat();
+
+    function toggleRiwayat() {
+    const riwayat = document.getElementById("riwayat");
+    const btn = document.getElementById("toggleRiwayatBtn");
+
+    if (riwayat.style.display === "none") {
+      riwayat.style.display = "block";
+      btn.textContent = "Sembunyikan Riwayat";
+    } else {
+      riwayat.style.display = "none";
+      btn.textContent = "Lihat Riwayat";
+    }
+  }
+
+  loadRiwayat();
 
 </script>
 </body>
