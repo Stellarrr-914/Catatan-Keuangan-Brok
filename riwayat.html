@@ -150,7 +150,7 @@
     }
 
     riwayatDiv.innerHTML = hasilFilter.map(row => {
-      const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
+      const [tanggal, kategori, jumlah, akun, keterangan, waktu_input, id_unik] = row;
 
       const tampilTanggal = tanggal
         ? new Date(tanggal).toLocaleDateString("id-ID", {
