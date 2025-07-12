@@ -49,6 +49,7 @@
   </label>
 
   <button onclick="loadRiwayat()">Terapkan Filter</button>
+  <button onclick="resetFilter()">Reset Filter</button>
 </div>
 
   <div id="riwayat">Loading...</div>
@@ -62,6 +63,12 @@
       panel.style.display = panel.style.display === "none" ? "block" : "none";
     }
 
+    function resetFilter() {
+      document.getElementById("filterKategori").value = "";
+      document.getElementById("filterAkun").value = "";
+      document.getElementById("filterWaktu").value = "all";
+      loadRiwayat(); // muat ulang semua data
+    }
 
     async function loadRiwayat() {
   try {
