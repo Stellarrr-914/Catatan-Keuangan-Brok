@@ -175,13 +175,14 @@
         : "-";
 
       return `
-        <div class="transaksi">
-          <strong>${tampilTanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
-          <em>${kategori}</em> | ${akun}<br/>
-          ${keterangan || "-"}<br/>
-          <small>Input: ${tampilWaktu}</small>
-        </div>
-      `;
+  <div class="transaksi">
+    <strong>${tampilTanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
+    <em>${kategori}</em> | ${akun}<br/>
+    ${keterangan || "-"}<br/>
+    <small>Input: ${tampilWaktu}</small><br/>
+    <button onclick="editTransaksi('${id_unik}')">✏️ Edit</button>
+  </div>
+`;
     }).join("");
 
   } catch (err) {
@@ -190,6 +191,10 @@
 }
 
     loadRiwayat();
+
+  function editTransaksi(id) {
+    alert("Kamu menekan edit untuk ID: " + id);
+  }
   </script>
 </body>
 </html>
