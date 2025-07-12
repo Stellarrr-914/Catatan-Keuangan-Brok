@@ -50,10 +50,6 @@
       text-align: center;
       display: none;
     }
-
-    #riwayat {
-      margin-top: 20px;
-    }
     
     .transaksi {
       padding: 10px;
@@ -111,11 +107,7 @@
 
   <div class="notif" id="notif">✅ Data berhasil disimpan!</div>
 
-  <button onclick="toggleRiwayat()" id="toggleRiwayatBtn">Lihat Riwayat</button>
-
-  <h3>Riwayat Transaksi</h3>
-  <div id="riwayat" style="display: none;">Loading...</div>
-
+  <a href="riwayat.html" class="btn-riwayat">📄 Lihat Riwayat</a>
 
   <script>
   function getLocalTimeWIB() {
@@ -162,76 +154,6 @@
       alert("Error koneksi: " + err.message);
     }
   });
-
-        const riwayatDiv = document.getElementById("riwayat");
-    const readURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
-
-    async function loadRiwayat() {
-      try {
-        const res = await fetch(readURL);
-        const data = await res.json();
-
-        if (data.length === 0) {
-          riwayatDiv.innerHTML = "Belum ada transaksi.";
-          return;
-        }
-
-        riwayatDiv.innerHTML = data.map(row => {
-          const [tanggal, kategori, jumlah, akun, keterangan, waktu_input] = row;
-
-          const tampilTanggal = tanggal
-            ? new Date(tanggal).toLocaleDateString("id-ID", {
-                weekday: "long",
-                day: "2-digit",
-                month: "long",
-                year: "numeric"
-              })
-            : "-";
-
-          const tampilWaktu = waktu_input
-            ? new Date(waktu_input).toLocaleString("id-ID", {
-                day: "2-digit",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: false,
-                timeZone: "Asia/Jakarta"
-              })
-            : "-";
-
-          return `
-            <div class="transaksi">
-              <strong>${tampilTanggal}</strong> - Rp${Number(jumlah).toLocaleString()}<br/>
-              <em>${kategori}</em> | ${akun}<br/>
-              ${keterangan || "-"}<br/>
-              <small>Input: ${tampilWaktu}</small>
-            </div>
-          `;
-        }).join("");
-
-      } catch (err) {
-        riwayatDiv.innerHTML = "Gagal memuat data: " + err.message;
-      }
-    }
-
-    loadRiwayat();
-
-    function toggleRiwayat() {
-    const riwayat = document.getElementById("riwayat");
-    const btn = document.getElementById("toggleRiwayatBtn");
-
-    if (riwayat.style.display === "none") {
-      riwayat.style.display = "block";
-      btn.textContent = "Sembunyikan Riwayat";
-    } else {
-      riwayat.style.display = "none";
-      btn.textContent = "Lihat Riwayat";
-    }
-  }
-
-  loadRiwayat();
 
 </script>
 </body>
