@@ -262,6 +262,7 @@
   const form = e.target;
 
   const data = {
+    method: "PUT", // ⬅️ kasih tanda ini buat backend
     tanggal: form.tanggal.value,
     jumlah: form.jumlah.value,
     kategori: form.kategori.value,
@@ -271,25 +272,17 @@
     id_unik: idEdit
   };
 
-  if (!data.tanggal || !data.kategori || !data.jumlah || !data.akun) {
-    alert("Mohon lengkapi semua data yang wajib diisi.");
-    return;
-  }
-
   try {
     const res = await fetch(readURL, {
-  method: "POST", // ✅ GUNAKAN POST SELALU
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    ...data,
-    method: "PUT" // ✅ Tambahkan penanda method PUT di dalam body
-  })
-});
+      method: "POST", // ⬅️ tetap POST biar aman CORS
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
 
     const result = await res.text();
-    if (res.ok) {
+    if (res.ok && result.includes("sukses")) {
       alert("Transaksi berhasil diupdate.");
       tutupModal();
       loadRiwayat();
