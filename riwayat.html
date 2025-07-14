@@ -103,9 +103,24 @@
   <button onclick="resetFilter()">Reset Filter</button>
 </div>
 
+  <h3>Edit / Tambah Transaksi</h3>
+<form id="form">
+  <input type="date" name="tanggal" required />
+  <input type="number" name="jumlah" required placeholder="Nominal" />
+  <input type="text" name="kategori" placeholder="Kategori" required />
+  <input type="text" name="akun" placeholder="Dompet" required />
+  <input type="text" name="keterangan" placeholder="Keterangan" />
+  <button type="submit">Tambah Transaksi</button>
+</form>
+
   <div id="riwayat">Loading...</div>
 
   <script>
+    let semuaTransaksi = []; // menyimpan semua data transaksi
+      let modeEdit = false;
+      let idEdit = "";
+    const form = document.getElementById("form");
+    
     const riwayatDiv = document.getElementById("riwayat");
     const readURL = "https://script.google.com/macros/s/AKfycbxOMNIT1kwZ2g_9ZujurEydk3yyNGHTLuykf4mfNjLkYtv_0IW6Xp0nGHUwIXfPBlvcAQ/exec";
 
@@ -125,6 +140,7 @@
   try {
     const res = await fetch(readURL);
     const data = await res.json();
+    semuaTransaksi = data;
 
     const filterKategori = document.getElementById("filterKategori").value;
     const filterAkun = document.getElementById("filterAkun").value;
@@ -193,8 +209,30 @@
     loadRiwayat();
 
   function editTransaksi(id) {
-    alert("Kamu menekan edit untuk ID: " + id);
+  const transaksi = semuaTransaksi.find(row => row[6] === id); // Index ke-6 = ID Unik
+
+  if (!transaksi) {
+    alert("Data tidak ditemukan.");
+    return;
   }
+
+  const [tanggal, kategori, jumlah, akun, keterangan] = transaksi;
+
+  // Isi ulang form
+  form.tanggal.value = tanggal;
+  form.jumlah.value = jumlah;
+  form.kategori.value = kategori;
+  form.akun.value = akun;
+  form.keterangan.value = keterangan || "";
+
+  // Aktifkan mode edit
+  modeEdit = true;
+  idEdit = id;
+
+  // Ubah tulisan tombol submit
+  form.querySelector("button[type='submit']").textContent = "Update Transaksi";
+}
+
   </script>
 </body>
 </html>
