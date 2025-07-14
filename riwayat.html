@@ -278,9 +278,15 @@
 
   try {
     const res = await fetch(readURL, {
-      method: "PUT",
-      body: JSON.stringify(data)
-    });
+  method: "POST", // ✅ GUNAKAN POST SELALU
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    ...data,
+    method: "PUT" // ✅ Tambahkan penanda method PUT di dalam body
+  })
+});
 
     const result = await res.text();
     if (res.ok) {
