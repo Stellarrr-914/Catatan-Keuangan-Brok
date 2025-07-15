@@ -50,6 +50,25 @@
     background-color: #666;
   }
 
+    .aksi {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.aksi button {
+  flex: 1;
+  padding: 0.4rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #eee;
+}
+
+.aksi button:hover {
+  background-color: #ccc;
+}
+
   .modal {
     position: fixed;
     top: 0;
@@ -222,6 +241,7 @@
     ${keterangan || "-"}<br/>
     <small>Input: ${tampilWaktu}</small><br/>
     <button onclick="editTransaksi('${id_unik}')">✏️ Edit</button>
+    <button onclick="hapusTransaksi('${id_unik}')">🗑️ Hapus</button>
   </div>
 `;
     }).join("");
@@ -293,6 +313,31 @@
     alert("Gagal koneksi: " + err.message);
   }
 });
+
+async function hapusTransaksi(id) {
+  if (!confirm("Yakin mau hapus transaksi ini?")) return;
+
+  const formData = new URLSearchParams();
+  formData.append("_method", "DELETE");
+  formData.append("id_unik", id);
+
+  try {
+    const res = await fetch(readURL, {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await res.text();
+    if (res.ok && result.includes("sukses")) {
+      alert("Transaksi berhasil dihapus.");
+      loadRiwayat();
+    } else {
+      alert("Gagal hapus: " + result);
+    }
+  } catch (err) {
+    alert("Gagal koneksi: " + err.message);
+  }
+}
 
   </script>
 </body>
