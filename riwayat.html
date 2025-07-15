@@ -282,8 +282,11 @@
   const form = document.getElementById("editForm");
   // Konversi tanggal ke format YYYY-MM-DD tapi pakai zona lokal (bukan UTC)
 
-  const [dd, mm, yyyy] = transaksi[0].split("/");
-  form.tanggal.value = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+  const rawDate = new Date(transaksi[0]);
+const yyyy = rawDate.getFullYear();
+const mm = String(rawDate.getMonth() + 1).padStart(2, "0");
+const dd = String(rawDate.getDate()).padStart(2, "0");
+  form.tanggal.value = `${yyyy}-${mm}-${dd}`;
   form.jumlah.value = jumlah;
   form.kategori.value = kategori;
   form.akun.value = akun;
@@ -301,13 +304,12 @@
   e.preventDefault();
   const form = e.target;
       
-  const now = new Date();
-const waktu_input = now.getFullYear() + "-" +
-  String(now.getMonth() + 1).padStart(2, "0") + "-" +
-  String(now.getDate()).padStart(2, "0") + " " +
-  String(now.getHours()).padStart(2, "0") + ":" +
-  String(now.getMinutes()).padStart(2, "0") + ":" +
-  String(now.getSeconds()).padStart(2, "0");
+  function getLocalTimeWIB() {
+  return new Date().toLocaleString("sv-SE", {
+    timeZone: "Asia/Jakarta",
+    hour12: false
+  }).replace(",", "");
+}
       
   const formData = new URLSearchParams();
   formData.append("_method", "PUT");
@@ -316,7 +318,7 @@ const waktu_input = now.getFullYear() + "-" +
   formData.append("kategori", form.kategori.value);
   formData.append("akun", form.akun.value);
   formData.append("keterangan", form.keterangan.value);
-  formData.append("waktu_input", waktu_input);
+  formData.append("waktu_input", getLocalTimeWIB());
   formData.append("id_unik", idEdit);
 
   showLoading();
