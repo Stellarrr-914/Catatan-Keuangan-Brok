@@ -281,7 +281,8 @@
   const [tanggal, kategori, jumlah, akun, keterangan] = transaksi;
   const form = document.getElementById("editForm");
 
-  form.tanggal.value = tanggal;
+  const isoTanggal = new Date(tanggal).toISOString().split("T")[0];
+  form.tanggal.value = isoTanggal;
   form.jumlah.value = jumlah;
   form.kategori.value = kategori;
   form.akun.value = akun;
