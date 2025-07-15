@@ -349,16 +349,14 @@ async function hapusTransaksi(id) {
     const result = await res.text();
     if (res.ok && result.includes("sukses")) {
       alert("Transaksi berhasil dihapus.");
-      if (res.ok && result.includes("sukses")) {
-  alert("Transaksi berhasil dihapus.");
-  await loadRiwayat(); // ⬅️ TUNGGU sampai selesai
-} else {
-  alert("Gagal hapus: " + result);
-}
-} catch (err) {
-  alert("Gagal koneksi: " + err.message);
-}
-hideLoading(); // ⬅️ Pindah ke sini, setelah semua selesai
+      await loadRiwayat(); // tunggu selesai
+    } else {
+      alert("Gagal hapus: " + result);
+    }
+  } catch (err) {
+    alert("Gagal koneksi: " + err.message);
+  }
+  hideLoading(); // ini harus di luar finally biar pasti jalan
 }
 
     function showLoading() {
