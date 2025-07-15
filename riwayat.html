@@ -288,6 +288,7 @@ const waktu_input = now.getFullYear() + "-" +
   String(now.getHours()).padStart(2, "0") + ":" +
   String(now.getMinutes()).padStart(2, "0") + ":" +
   String(now.getSeconds()).padStart(2, "0");
+  const [dd, mm, yyyy] = transaksi[0].split("/");
   form.tanggal.value = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
   form.jumlah.value = jumlah;
   form.kategori.value = kategori;
