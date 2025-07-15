@@ -299,36 +299,35 @@
   e.preventDefault();
   const form = e.target;
 
-  const data = {
-    method: "PUT", // ⬅️ kasih tanda ini buat backend
-    tanggal: form.tanggal.value,
-    jumlah: form.jumlah.value,
-    kategori: form.kategori.value,
-    akun: form.akun.value,
-    keterangan: form.keterangan.value,
-    waktu_input: new Date().toISOString(),
-    id_unik: idEdit
-  };
+  const formData = new URLSearchParams();
+  formData.append("_method", "PUT");
+  formData.append("tanggal", form.tanggal.value);
+  formData.append("jumlah", form.jumlah.value);
+  formData.append("kategori", form.kategori.value);
+  formData.append("akun", form.akun.value);
+  formData.append("keterangan", form.keterangan.value);
+  formData.append("waktu_input", new Date().toISOString());
+  formData.append("id_unik", idEdit);
 
+  showLoading();
   try {
     const res = await fetch(readURL, {
-      method: "POST", // ⬅️ tetap POST biar aman CORS
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
+      method: "POST",
+      body: formData
     });
 
     const result = await res.text();
     if (res.ok && result.includes("sukses")) {
       alert("Transaksi berhasil diupdate.");
       tutupModal();
-      loadRiwayat();
+      await loadRiwayat();
     } else {
       alert("Gagal update: " + result);
     }
   } catch (err) {
     alert("Gagal koneksi: " + err.message);
+  } finally {
+    hideLoading();
   }
 });
 
