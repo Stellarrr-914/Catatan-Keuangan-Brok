@@ -130,16 +130,27 @@
   <label>Kategori:
     <select id="filterKategori">
       <option value="">Semua</option>
-      <option value="Pulsa">Pulsa</option>
-      <option value="Langganan Bstation 💻">Langganan Bstation 💻</option>
+      <option>Pulsa & Data</option>
+      <option>Langganan Bstation</option>
+      <option>Budget Pacaran ❤</option>
+      <option>Nabung</option>
+      <option>Online Shop</option>
+      <option>Bensin / Transport</option>
+      <option>Delivery</option>
+      <option>Pribadi/Tunai</option>
     </select>
   </label>
 
   <label>Akun:
     <select id="filterAkun">
       <option value="">Semua</option>
-      <option value="DANA">DANA</option>
-      <option value="ShopeePay">ShopeePay</option>
+      <option>Wondr (BNI)</option>
+      <option>ShopeePay</option>
+      <option>SeaBank</option>
+      <option>DANA</option>
+      <option>GoPay</option>
+      <option>PayPal</option>
+      <option>Tunai</option>
     </select>
   </label>
 
@@ -161,8 +172,30 @@
     <form id="editForm">
       <label>Tanggal: <input type="date" name="tanggal" required /></label><br/>
       <label>Jumlah: <input type="number" name="jumlah" required /></label><br/>
-      <label>Kategori: <input type="text" name="kategori" required /></label><br/>
-      <label>Akun: <input type="text" name="akun" required /></label><br/>
+      <label>Kategori:
+  <select name="kategori" required>
+    <option>Pulsa & Data</option>
+      <option>Langganan Bstation</option>
+      <option>Budget Pacaran ❤</option>
+      <option>Nabung</option>
+      <option>Online Shop</option>
+      <option>Bensin / Transport</option>
+      <option>Delivery</option>
+      <option>Pribadi/Tunai</option>
+  </select>
+</label><br/>
+
+<label>Akun:
+  <select name="akun" required>
+    <option>Wondr (BNI)</option>
+      <option>ShopeePay</option>
+      <option>SeaBank</option>
+      <option>DANA</option>
+      <option>GoPay</option>
+      <option>PayPal</option>
+      <option>Tunai</option>
+  </select>
+</label><br/>
       <label>Keterangan: <input type="text" name="keterangan" /></label><br/>
       <button type="submit">Update</button>
       <button type="button" onclick="tutupModal()">Batal</button>
