@@ -280,9 +280,12 @@
 
   const [tanggal, kategori, jumlah, akun, keterangan] = transaksi;
   const form = document.getElementById("editForm");
-
-  const isoTanggal = new Date(tanggal).toISOString().split("T")[0];
-  form.tanggal.value = isoTanggal;
+  // Konversi tanggal ke format YYYY-MM-DD tapi pakai zona lokal (bukan UTC)
+  const tanggalObj = new Date(tanggal);
+  const yyyy = tanggalObj.getFullYear();
+  const mm = String(tanggalObj.getMonth() + 1).padStart(2, "0");
+  const dd = String(tanggalObj.getDate()).padStart(2, "0");
+  form.tanggal.value = `${yyyy}-${mm}-${dd}`;
   form.jumlah.value = jumlah;
   form.kategori.value = kategori;
   form.akun.value = akun;
