@@ -281,13 +281,7 @@
   const [tanggal, kategori, jumlah, akun, keterangan] = transaksi;
   const form = document.getElementById("editForm");
   // Konversi tanggal ke format YYYY-MM-DD tapi pakai zona lokal (bukan UTC)
-  const now = new Date();
-const waktu_input = now.getFullYear() + "-" +
-  String(now.getMonth() + 1).padStart(2, "0") + "-" +
-  String(now.getDate()).padStart(2, "0") + " " +
-  String(now.getHours()).padStart(2, "0") + ":" +
-  String(now.getMinutes()).padStart(2, "0") + ":" +
-  String(now.getSeconds()).padStart(2, "0");
+
   const [dd, mm, yyyy] = transaksi[0].split("/");
   form.tanggal.value = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
   form.jumlah.value = jumlah;
@@ -306,7 +300,15 @@ const waktu_input = now.getFullYear() + "-" +
     document.getElementById("editForm").addEventListener("submit", async function (e) {
   e.preventDefault();
   const form = e.target;
-
+      
+  const now = new Date();
+const waktu_input = now.getFullYear() + "-" +
+  String(now.getMonth() + 1).padStart(2, "0") + "-" +
+  String(now.getDate()).padStart(2, "0") + " " +
+  String(now.getHours()).padStart(2, "0") + ":" +
+  String(now.getMinutes()).padStart(2, "0") + ":" +
+  String(now.getSeconds()).padStart(2, "0");
+      
   const formData = new URLSearchParams();
   formData.append("_method", "PUT");
   formData.append("tanggal", form.tanggal.value);
