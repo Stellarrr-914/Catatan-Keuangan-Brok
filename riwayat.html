@@ -89,6 +89,18 @@
   width: 90%;
   max-width: 400px;
 }  
+    .spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #444;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
   @media (min-width: 600px) {
     .filter-panel {
@@ -158,8 +170,9 @@
   </div>
 </div>
 
-
-  <div id="riwayat">Loading...</div>
+  <div id="loading" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.6);z-index:999;display:flex;justify-content:center;align-items:center;">
+  <div class="spinner"></div>
+</div>
 
   <script>
     let semuaTransaksi = [];
@@ -181,7 +194,8 @@
     }
 
     async function loadRiwayat() {
-  try {
+      showLoading();
+      try {
     const res = await fetch(readURL);
     const data = await res.json();
     semuaTransaksi = data;
@@ -248,7 +262,9 @@
 
   } catch (err) {
     riwayatDiv.innerHTML = "Gagal memuat data: " + err.message;
-  }
+  } finally {
+        hideloading();
+    }
 }
 
     loadRiwayat();
@@ -320,7 +336,8 @@ async function hapusTransaksi(id) {
   const formData = new URLSearchParams();
   formData.append("_method", "DELETE");
   formData.append("id_unik", id);
-
+  
+  showLoading();
   try {
     const res = await fetch(readURL, {
       method: "POST",
@@ -336,7 +353,16 @@ async function hapusTransaksi(id) {
     }
   } catch (err) {
     alert("Gagal koneksi: " + err.message);
+  } finally {
+    hideloading()
   }
+}
+
+    function showLoading() {
+  document.getElementById("loading").style.display = "flex";
+}
+function hideLoading() {
+  document.getElementById("loading").style.display = "none";
 }
 
   </script>
